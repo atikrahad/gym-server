@@ -27,6 +27,12 @@ async function run() {
 
     const userCollection = client.db('GymDB').collection('users')
     
+    app.get('/user', async(req, res)=>{
+      const getEmail = req.query.email;
+      const result = await userCollection.findOne({email: getEmail})
+      res.send(result)
+    })
+
     app.post('/user', async(req, res)=>{
         const userInfo = req.body;
         const result = await userCollection.insertOne(userInfo)
