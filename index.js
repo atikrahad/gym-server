@@ -26,10 +26,16 @@ async function run() {
     await client.connect();
 
     const userCollection = client.db('GymDB').collection('users')
+    const articleCollection = client.db('GymDB').collection('articles')
     
     app.get('/user', async(req, res)=>{
       const getEmail = req.query.email;
       const result = await userCollection.findOne({email: getEmail})
+      res.send(result)
+    })
+
+    app.get('/articles', async(req, res)=>{
+      const result =await articleCollection.find().toArray()
       res.send(result)
     })
 
@@ -43,9 +49,11 @@ async function run() {
 
     app.post('/article', async(req, res)=>{
         const userInfo = req.body;
-        const result = await userCollection.insertOne(userInfo)
+        const result = await articleCollection.insertOne(userInfo)
         res.send(result)
     })
+
+
     
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
