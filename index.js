@@ -52,6 +52,12 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/comments', async(req, res)=> {
+      const ids = req.query.ids
+      const result = await commentsCollection.find({blogsId: ids}).toArray()
+      res.send(result)
+    })
+
     app.post("/user", async (req, res) => {
       const userInfo = req.body;
       const result = await userCollection.insertOne(userInfo);
