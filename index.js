@@ -59,6 +59,26 @@ async function run() {
       res.send(result)
     })
 
+    app.put("/updateprofile", async(req, res) => {
+      const info = req.body;
+      const query = req.query.email;
+      const getQuery = {email: query}
+      const option = {upsert: true}
+      const update = {
+        $set: {
+          bio: info.bio,
+          country: info.country,
+          phone: info.phone,
+          gender: info.gender,
+          address: info.address,
+          coverpic: info.coverpic,
+          name: info.name,
+        }
+      }
+      const result = await userCollection.updateOne(getQuery, update, option)
+      res.send(result)
+    })
+
     app.post("/user", async (req, res) => {
       const userInfo = req.body;
       const result = await userCollection.insertOne(userInfo);
