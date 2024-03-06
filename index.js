@@ -25,6 +25,7 @@ async function run() {
     const userCollection = client.db("GymDB").collection("users");
     const articleCollection = client.db("GymDB").collection("articles");
     const commentsCollection = client.db("GymDB").collection("comments");
+    const applicationCollection = client.db("GymDB").collection("application");
 
     app.get("/user", async (req, res) => {
       const getEmail = req.query.email;
@@ -73,6 +74,12 @@ async function run() {
     app.post("/comment", async(req, res)=>{
       const coment = req.body;
       const result = await commentsCollection.insertOne(coment)
+      res.send(result)
+    })
+
+    app.post("/application", async(req, res)=> {
+      const info = req.body
+      const result = await applicationCollection.insertOne(info)
       res.send(result)
     })
 
