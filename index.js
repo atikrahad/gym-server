@@ -59,6 +59,11 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/applications", async(req, res)=>{
+      const result =await applicationCollection.find().toArray()
+      res.send(result)
+    })
+
     app.put("/updateprofile", async(req, res) => {
       const info = req.body;
       const query = req.query.email;
