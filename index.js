@@ -24,6 +24,7 @@ async function run() {
 
     const userCollection = client.db("GymDB").collection("users");
     const articleCollection = client.db("GymDB").collection("articles");
+    const commentsCollection = client.db("GymDB").collection("comments");
 
     app.get("/user", async (req, res) => {
       const getEmail = req.query.email;
@@ -45,7 +46,7 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/article:id', async(req, res)=>{
+    app.get('/article/:id', async(req, res)=>{
       const ids = req.params.id;
       const result = await articleCollection.findOne({_id: new ObjectId(ids)})
       res.send(result)
@@ -62,6 +63,12 @@ async function run() {
       const result = await articleCollection.insertOne(userInfo);
       res.send(result);
     });
+
+    app.post("/comment", async(req, res)=>{
+      const coment = req.body;
+      const result = await commentsCollection.insertOne(coment)
+      res.send(result)
+    })
 
     await client.db("admin").command({ ping: 1 });
     console.log(
