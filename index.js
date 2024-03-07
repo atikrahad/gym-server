@@ -98,6 +98,21 @@ async function run() {
       res.send(result)
     })
 
+
+    app.put("/updateposition", async(req, res)=> {
+      const getEmail = req.query.email;
+      const getInfo = req.body;
+      const query = {applicantEmail: getEmail}
+      const option = {upsert : true}
+      const update = {
+        $set : {
+          applicationPosition: getInfo.applicationPosition
+        }
+      }
+      const result =await applicationCollection.updateOne(query, update, option)
+      res.send(result)
+    })
+
     app.post("/user", async (req, res) => {
       const userInfo = req.body;
       const result = await userCollection.insertOne(userInfo);
