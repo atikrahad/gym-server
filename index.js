@@ -104,6 +104,20 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/updateprocoverpic", async (req, res) => {
+      const info = req.body;
+      const query = req.query.email;
+      const getQuery = { email: query };
+      const option = { upsert: true };
+      const update = {
+        $set: {
+          coverpic: info.coverpic
+        },
+      };
+      const result = await userCollection.updateOne(getQuery, update, option);
+      res.send(result);
+    });
+
     app.put("/updateusertype", async (req, res) => {
       const getEmail = req.query.email;
       const getInfo = req.body;
