@@ -150,6 +150,13 @@ async function run() {
       res.send(result);
     });
 
+
+    app.delete("/deletecomment", async(req, res) => {
+      const ids = req.query.id;
+      const result = await commentsCollection.deleteOne({_id: new ObjectId(ids)})
+      res.send(result)
+    })
+
     app.post("/user", async (req, res) => {
       const userInfo = req.body;
       const result = await userCollection.insertOne(userInfo);
