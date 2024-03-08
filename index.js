@@ -47,28 +47,34 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/article/:id', async(req, res)=>{
+    app.get("/article/:id", async (req, res) => {
       const ids = req.params.id;
-      const result = await articleCollection.findOne({_id: new ObjectId(ids)})
-      res.send(result)
-    })
+      const result = await articleCollection.findOne({
+        _id: new ObjectId(ids),
+      });
+      res.send(result);
+    });
 
-    app.get('/comments', async(req, res)=> {
-      const ids = req.query.ids
-      const result = await commentsCollection.find({blogsId: ids}).toArray()
-      res.send(result)
-    })
+    app.get("/comments", async (req, res) => {
+      const ids = req.query.ids;
+      const result = await commentsCollection.find({ blogsId: ids }).toArray();
+      res.send(result);
+    });
 
-    app.get("/applications", async(req, res)=>{
-      const result =await applicationCollection.find().toArray()
-      res.send(result)
-    })
+    app.get("/applications", async (req, res) => {
+      const queryData = req.query.position;
+      console.log(queryData);
+      const result = await applicationCollection
+        .find({ applicationPosition: queryData })
+        .toArray();
+      res.send(result);
+    });
 
-    app.put("/updateprofile", async(req, res) => {
+    app.put("/updateprofile", async (req, res) => {
       const info = req.body;
       const query = req.query.email;
-      const getQuery = {email: query}
-      const option = {upsert: true}
+      const getQuery = { email: query };
+      const option = { upsert: true };
       const update = {
         $set: {
           bio: info.bio,
@@ -78,40 +84,57 @@ async function run() {
           address: info.address,
           coverpic: info.coverpic,
           name: info.name,
-        }
-      }
-      const result = await userCollection.updateOne(getQuery, update, option)
-      res.send(result)
-    })
+        },
+      };
+      const result = await userCollection.updateOne(getQuery, update, option);
+      res.send(result);
+    });
 
-    app.put("/updateusertype", async(req, res)=> {
+    app.put("/updateprofilepic", async (req, res) => {
+      const info = req.body;
+      const query = req.query.email;
+      const getQuery = { email: query };
+      const option = { upsert: true };
+      const update = {
+        $set: {
+          image: info.profilepic
+        },
+      };
+      const result = await userCollection.updateOne(getQuery, update, option);
+      res.send(result);
+    });
+
+    app.put("/updateusertype", async (req, res) => {
       const getEmail = req.query.email;
       const getInfo = req.body;
-      const query = {email: getEmail}
-      const option = {upsert : true}
+      const query = { email: getEmail };
+      const option = { upsert: true };
       const update = {
-        $set : {
-          userType: getInfo.userType
-        }
-      }
-      const result =await userCollection.updateOne(query, update, option)
-      res.send(result)
-    })
+        $set: {
+          userType: getInfo.userType,
+        },
+      };
+      const result = await userCollection.updateOne(query, update, option);
+      res.send(result);
+    });
 
-
-    app.put("/updateposition", async(req, res)=> {
+    app.put("/updateposition", async (req, res) => {
       const getEmail = req.query.email;
       const getInfo = req.body;
-      const query = {applicantEmail: getEmail}
-      const option = {upsert : true}
+      const query = { applicantEmail: getEmail };
+      const option = { upsert: true };
       const update = {
-        $set : {
-          applicationPosition: getInfo.applicationPosition
-        }
-      }
-      const result =await applicationCollection.updateOne(query, update, option)
-      res.send(result)
-    })
+        $set: {
+          applicationPosition: getInfo.applicationPosition,
+        },
+      };
+      const result = await applicationCollection.updateOne(
+        query,
+        update,
+        option
+      );
+      res.send(result);
+    });
 
     app.post("/user", async (req, res) => {
       const userInfo = req.body;
@@ -125,17 +148,17 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/comment", async(req, res)=>{
+    app.post("/comment", async (req, res) => {
       const coment = req.body;
-      const result = await commentsCollection.insertOne(coment)
-      res.send(result)
-    })
+      const result = await commentsCollection.insertOne(coment);
+      res.send(result);
+    });
 
-    app.post("/application", async(req, res)=> {
-      const info = req.body
-      const result = await applicationCollection.insertOne(info)
-      res.send(result)
-    })
+    app.post("/application", async (req, res) => {
+      const info = req.body;
+      const result = await applicationCollection.insertOne(info);
+      res.send(result);
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
